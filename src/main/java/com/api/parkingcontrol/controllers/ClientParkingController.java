@@ -1,6 +1,7 @@
 package com.api.parkingcontrol.controllers;
 
 import com.api.parkingcontrol.dtos.ClientParkingDto;
+import com.api.parkingcontrol.dtos.ParkingSpotDto;
 import com.api.parkingcontrol.models.ClientParkingModel;
 import com.api.parkingcontrol.models.ParkingSpotModel;
 import com.api.parkingcontrol.services.ClientParkingService;
@@ -50,5 +51,31 @@ public class ClientParkingController {
         return ResponseEntity.status(HttpStatus.OK).body(clientParkingModelOptional.get());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteClientParking(@PathVariable(value = "id") UUID id){
+        Optional<ClientParkingModel> clientParkingModelOptional = clientParkingService.findById(id);
+        if (!clientParkingModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client Parking not found.");
+        }
+        clientParkingService.delete(clientParkingModelOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Client Parking deleted successfully.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateClientParking(@PathVariable(value = "id") UUID id,
+                                                    @RequestBody @Valid ClientParkingDto clientParkingDto){
+        Optional<ClientParkingModel> clientParkingModelOptional = clientParkingService.findById(id);
+        if (!clientParkingModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client Parking not found.");
+        }
+        var clientParkingModel = clientParkingModelOptional.get();
+        clientParkingModel.setName(clientParkingDto.getName());
+        clientParkingModel.setCpf(clientParkingDto.getCpf());
+        clientParkingModel.setEmail(clientParkingDto.getEmail());
+        clientParkingModel.setPhone(clientParkingDto.getPhone());
+        clientParkingModel.setApartment(clientParkingDto.getApartment());
+        clientParkingModel.setBlock(clientParkingDto.getBlock());
+        return ResponseEntity.status(HttpStatus.OK).body(clientParkingService.save(clientParkingModel));
+    }
 
 }

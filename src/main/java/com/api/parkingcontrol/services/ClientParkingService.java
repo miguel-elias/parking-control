@@ -30,4 +30,9 @@ public class ClientParkingService {
     public Optional<ClientParkingModel> findById(UUID id) {
         return clientParkingRepository.findById(id);
     }
+
+    @Transactional
+    public void delete(ClientParkingModel clientParkingModel) {
+        clientParkingRepository.delete(clientParkingModel);
+    }
 }
