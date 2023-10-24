@@ -5,6 +5,10 @@ import com.api.parkingcontrol.dtos.ParkingSpotDto;
 import com.api.parkingcontrol.models.ClientParkingModel;
 import com.api.parkingcontrol.models.ParkingSpotModel;
 import com.api.parkingcontrol.services.ClientParkingService;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,7 +42,7 @@ public class ClientParkingController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllClientParking(@PageableDefault(page = 0, size = 5, sort = "id",direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<Object> getAllClientParking(@PageableDefault(page = 0, size = 10, sort = "id",direction = Sort.Direction.DESC) Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(clientParkingService.findAll(pageable));
     }
 
@@ -62,8 +66,8 @@ public class ClientParkingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateClientParking(@PathVariable(value = "id") UUID id,
-                                                    @RequestBody @Valid ClientParkingDto clientParkingDto){
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public ResponseEntity<Object> updateClientParking(@PathVariable(value = "id") UUID id,@RequestBody @Valid ClientParkingDto clientParkingDto){
         Optional<ClientParkingModel> clientParkingModelOptional = clientParkingService.findById(id);
         if (!clientParkingModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client Parking not found.");

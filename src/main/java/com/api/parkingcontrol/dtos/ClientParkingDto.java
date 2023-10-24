@@ -1,9 +1,13 @@
 package com.api.parkingcontrol.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientParkingDto {
+
+    private String id;
 
     private String name;
     @NotBlank
@@ -22,6 +26,14 @@ public class ClientParkingDto {
 
     @NotBlank
     private String block;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
